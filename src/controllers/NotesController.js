@@ -31,7 +31,7 @@ class NotesController{
     }
 
     async show(req, res){
-        const { id } = req.user.id;
+        const { id } = req.params;
 
         const note = await knex("notes").where({ id }).first();
         const tags = await knex("tags").where({ note_id: id }).orderBy("name");
@@ -43,6 +43,8 @@ class NotesController{
     async delete(req, res){
         const { id } = req.user.id;
         await knex("notes").where({ id }).delete();
+        await knex("tags").where({ note_id: id }).delete();
+        await knex("links").where({ note_id: id }).delete();
         res.json()
     }
 
