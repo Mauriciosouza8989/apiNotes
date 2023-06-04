@@ -34,14 +34,14 @@ class NotesController{
         const { id } = req.params;
 
         const note = await knex("notes").where({ id }).first();
-        const tags = await knex("tags").where({ note_id: id }).orderBy("name");
         const links = await knex("links").where({ note_id: id }).orderBy("created_at");
+        const tags = await knex("tags").where({ note_id: id }).orderBy("name");
 
         return res.json({...note, tags, links});
     }
 
     async delete(req, res){
-        const { id } = req.user.id;
+        const { id } = req.params;
         await knex("notes").where({ id }).delete();
         await knex("tags").where({ note_id: id }).delete();
         await knex("links").where({ note_id: id }).delete();
